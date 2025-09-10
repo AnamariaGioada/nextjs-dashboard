@@ -10,11 +10,13 @@ import {
 import { Button } from "@/app/ui/button";
 import { createInvoice, State } from "@/app/lib/actions";
 import { useActionState } from "react";
-import { create } from "domain";
 
 export default function Form({ customers }: { customers: CustomerField[] }) {
   const initialState: State = { message: null, errors: {} };
-  const [state, formAction] = useActionState(createInvoice, initialState);
+  const [state, formAction] = useActionState<State, FormData>(
+    createInvoice,
+    initialState
+  );
   return (
     <form action={formAction}>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
@@ -120,14 +122,22 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
                 </label>
               </div>
             </div>
-            <div id="status-error" aria-live="polite" aria-atomic="true">
-              {state.errors?.status &&
-                state.errors.status.map((error: string) => (
-                  <p className="mt-2 text-sm text-red-500" key={error}>
-                    {error}
-                  </p>
-                ))}
-            </div>
+          </div>
+          <div id="status-error" aria-live="polite" aria-atomic="true">
+            {state.errors?.status &&
+              state.errors.status.map((error: string) => (
+                <p className="mt-2 text-sm text-red-500" key={error}>
+                  {error}
+                </p>
+              ))}
+          </div>
+          <div id="all-errors" aria-live="polite" aria-atomic="true">
+            {state.errors?.all &&
+              state.errors.all.map((error: string) => (
+                <p className="mt-2 text-sm text-red-500" key={error}>
+                  {error}
+                </p>
+              ))}
           </div>
         </fieldset>
       </div>
